@@ -2,7 +2,7 @@
 A project to exploit data returned from Google Searches to train a machine learning model to classify the SIC (industry) of businesses.
 
 Expected steps:
-1) Import and format data from Comapnies House
+1) Import and format data from Companies House
 2) Build web-scraper to return text from Google Search results 
 3) Filter out scraped text to leave words with explanatory power for an industry (using the NLTK library).
 4) Find a way to order companies in each SIC by size/web-presence. Sample X% of largest companies in each SIC for scraping.
