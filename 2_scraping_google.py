@@ -37,7 +37,7 @@ import requests
 from bs4 import BeautifulSoup
 
 #read cleaned up data from local directory
-ch = pd.read_csv('ch_0917.csv')
+ch = pd.read_csv('ch_1017.csv')
 
 '''
 1) Building blocks to return links for a search term
@@ -199,13 +199,14 @@ def keyWords(list):
         except:
             continue
     # Return list of words
-    keywords = " ".join([word for word in words.split()
-                                if 'http' not in word
-                                    and not word.startswith('@')
-                                    and word != 'RT'
-                                if 'co' not in word
-                                if word not in STOPWORDS
-                                ])
+    keywords = " ".join([word for word in words.split() if word not in STOPWORDS])
+
+    # Tokenize and tag words
+    tokens = nltk.word_tokenize(keywords)
+    tagged = nltk.pos_tag(tokens)
+
+    # Keep nouns only
+    keywords = " ".join([word[0] for word in tagged if word[1] in ['NNS','NN']])
     return keywords
 
 
@@ -258,4 +259,26 @@ plt.show()
 7) Extend STOPWORDS list to remove certain words
 '''
 
-STOPWORDS.add(['sun','new','showbiz','tv','uk'])
+#STOPWORDS is a set, so need to use update method
+STOPWORDS.update(customWords)
+
+# ways to improve this: list of common names, weights and quantities, months and dates,
+#ignore search term & without the s
+
+customWords = ['sun','new','showbiz','tv','uk','john','lewis','partnership','offers','store',
+'business','company','stores','shop','department','partner','street','london','partners','peter',
+'jones','duration', 'views', 'minutes', 'month', 'version', 'system','tesco','september','privacy',
+'policy','customer','service','home', 'company', 'london', 'price', 'offer', 'customer',
+'service', 'home', 'year', 'london', 'day', 'march', 'business', 'shop','item','level','logo','menu',
+'account','co','road','centre']
+
+'''
+Playground
+'''
+
+# count words
+from collections import Counter
+counts = Counter()
+for sentence in tokens:
+    counts.update(word.strip('.,?!"\'').lower() for word in sentence.split())
+
